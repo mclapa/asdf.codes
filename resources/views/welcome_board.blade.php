@@ -28,7 +28,7 @@
 <script src="js/libs.js"></script> -->
 <script src="{{ mix('/js/manifest.js') }}"></script>
 <script src="{{ mix('/js/vendor.js') }}"></script>
-<script src="{{ mix('/js/public.js') }}"></script>
+<script src="{{ mix('/js/board.js') }}"></script>
 
 </body>
 </html>

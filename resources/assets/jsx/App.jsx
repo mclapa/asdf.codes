@@ -12,7 +12,7 @@ let App = createReactClass({
   },
   render() {
     return (
-      <div>eatrgetrg
+      <div>
         {this.props.children}
       </div>
     )

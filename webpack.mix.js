@@ -19,6 +19,7 @@ mix.webpackConfig({
         ]
     }
 }).react('resources/assets/jsx/main.jsx', 'public/js/public.js')
+  .react('resources/assets/jsx/board.jsx', 'public/js/board.js')
   .extract([
     'react',
     'react-dom',
