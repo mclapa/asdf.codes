@@ -52,7 +52,7 @@ class HomeController extends Controller
         }
 
         return view('welcome_board', [
-
+            'slug' => $slug,
         ]);
     }
 

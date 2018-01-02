@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <title>Welcome | asdf.codes</title>
+    <title>{{ $slug }} | asdf.codes</title>
     <meta name="keywords" content="New homes in southern ontario by thomasfield homes" />
     <link rel="Shortcut Icon" href="/images/favicon.ico" type="image/x-icon" />
 
