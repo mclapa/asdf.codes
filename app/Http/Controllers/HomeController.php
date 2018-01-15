@@ -55,9 +55,4 @@ class HomeController extends Controller
             'slug' => $slug,
         ]);
     }
-
-    public function adminba()
-    {
-        return view('welcome_admin');
-    }
 }

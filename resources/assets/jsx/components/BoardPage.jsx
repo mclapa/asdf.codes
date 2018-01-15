@@ -3,10 +3,16 @@ import React from 'react'
 
 let createReactClass = require('create-react-class')
 
+let AlertMixin = require('mixins/AlertMixin.jsx')
 let Form = require('mixins/FormMixin.jsx')
+let Xhr = require('functions/Xhr.jsx')
 
 let BoardPage = createReactClass({
-  mixins: [Form.formMixin()],
+  mixins: [
+    Form.formMixin(),
+    AlertMixin.alertMixin(),
+  ],
+  ajax: '/boards',
   getInitialState() {
     let formData = this.initFormData([
       'name',
@@ -17,9 +23,37 @@ let BoardPage = createReactClass({
       formData: formData,
     }
   },
+  formSubmit(e) {
+    e.preventDefault()
+    let toSubmit = {}
+    let formData = this.state.formData
+
+    toSubmit = this.extractForm(this)
+
+    formData = this.clearErrors(formData)
+
+    this.setState({
+      isSubmitting: true,
+      formData: formData,
+    })
+
+    Xhr.xhr(
+      'POST',
+      this.ajax,
+      toSubmit
+    ).then((xhrReturn) => {
+      if (!xhrReturn.success) {
+        this.extractErrors(xhrReturn.data)
+      } else {
+        this.alert('Added asdf')
+        this.reInitFormData()
+      }
+    })
+  },
   render() {
     return (
       <div>
+        {this.renderAlertContainer()}
         <nav className="navbar navbar-inverse">
           <div className="container-fluid">
             <div className="navbar-header">
@@ -42,7 +76,9 @@ let BoardPage = createReactClass({
         <div className="container text-left">
           <div className="row">
             <div className="col-sm-4 col-sm-offset-3">
-              <form>
+              <form
+                onSubmit={this.formSubmit}
+              >
                 <div className="form-group">
                   <label htmlFor="exampleInputEmail1">Coin</label>
                   <input
@@ -73,10 +109,25 @@ let BoardPage = createReactClass({
                 <div className="form-group">
                   <label htmlFor="exampleInputFile">.bat File</label>
                   <input type="file" id="exampleInputFile" />
-                  <p className="help-block">Example block-level help text here.</p>
+                  <p className="help-block">Don't put anything personal in here</p>
                 </div>
-                <button type="submit" className="btn btn-default">Submit</button>
+                <button
+                  type="submit"
+                  className="btn btn-primary pull-right"
+                  disabled={this.state.isSubmitting}
+                >
+                  Save
+                </button>
               </form>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              {this.state.formData.form.message ? (
+                <div className="alert alert-danger">
+                  {this.state.formData.form.message}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

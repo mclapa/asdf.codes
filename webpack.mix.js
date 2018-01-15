@@ -32,6 +32,8 @@ mix.webpackConfig({
     'prop-types',
     'classnames',
     'reactstrap',
+    'react-toastify',
+    'react-nprogress',
   ])
   .sourceMaps()
 
