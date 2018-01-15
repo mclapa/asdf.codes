@@ -3,18 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Board extends Model
+class BoardItem extends Model
 {
-    // use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'slug',
+        'board_id',
+        'name',
+        'public_key',
     ];
 
     /**
@@ -26,8 +27,4 @@ class Board extends Model
         'created_at', 'deleted_at', 'updated_at'
     ];
 
-    public function boardItems()
-    {
-        return $this->hasMany('App\BoardItem');
-    }
 }

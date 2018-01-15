@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use Validator;
 
-use App\Http\Repositories\BoardsRepository;
+use App\Http\Repositories\BoardRepository;
 
 // use App\Http\Transformers\Api\V1\CommunitiesPublicTransformer;
 
@@ -19,7 +19,7 @@ class HomeController extends Controller
      * @return void
      */
     public function __construct(
-        BoardsRepository $boardsRepo
+        BoardRepository $boardsRepo
     )
     {
         $this->boardsRepo = $boardsRepo;

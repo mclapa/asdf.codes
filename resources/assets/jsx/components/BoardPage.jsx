@@ -7,12 +7,13 @@ let AlertMixin = require('mixins/AlertMixin.jsx')
 let Form = require('mixins/FormMixin.jsx')
 let Xhr = require('functions/Xhr.jsx')
 
+let BoardModel = require('models/BoardModel.jsx')
+
 let BoardPage = createReactClass({
   mixins: [
     Form.formMixin(),
     AlertMixin.alertMixin(),
   ],
-  ajax: '/boards',
   getInitialState() {
     let formData = this.initFormData([
       'name',
@@ -20,6 +21,7 @@ let BoardPage = createReactClass({
     ])
 
     return {
+      BoardModel: new BoardModel(),
       formData: formData,
     }
   },
@@ -27,6 +29,7 @@ let BoardPage = createReactClass({
     e.preventDefault()
     let toSubmit = {}
     let formData = this.state.formData
+
 
     toSubmit = this.extractForm(this)
 
@@ -39,7 +42,7 @@ let BoardPage = createReactClass({
 
     Xhr.xhr(
       'POST',
-      this.ajax,
+      `${this.state.BoardModel.ajax}/1`,
       toSubmit
     ).then((xhrReturn) => {
       if (!xhrReturn.success) {
