@@ -30,12 +30,12 @@ class BoardItemRepository {
 
     public function where($where = [])
     {
-        return Board::where($where);
+        return BoardItem::where($where);
     }
 
     public function destroy($id)
     {
-        $boardModel = Board::find($id);
+        $boardModel = BoardItem::find($id);
 
         return $boardModel->delete();
     }

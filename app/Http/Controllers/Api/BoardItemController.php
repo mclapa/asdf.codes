@@ -117,9 +117,9 @@ class BoardItemController extends Controller
         return response()->json($this->item($boardItem, new BoardItemTransformer));
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $boardId, $boardItemId)
     {
-        $delete = $this->communitiesRepo->destroy($id);
+        $delete = $this->boardItemRepo->destroy($boardItemId);
 
         return response()->json(['data' => ['success' => $delete ? true: false]]);
     }

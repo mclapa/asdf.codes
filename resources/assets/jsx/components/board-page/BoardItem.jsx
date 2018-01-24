@@ -8,6 +8,7 @@ let Form = require('mixins/FormMixin.jsx')
 
 let BoardItemModel = require('models/BoardItemModel.jsx')
 
+let ItemDelete = require('./ItemDelete.jsx')
 let ItemEdit = require('./ItemEdit.jsx')
 
 let BoardItem = createReactClass({
@@ -32,7 +33,10 @@ let BoardItem = createReactClass({
   render() {
     return (
       <li className="list-group-item">
-
+        <ItemDelete
+          alert={this.props.alert}
+          item={this.props.item}
+        />
         <h3>
           {this.props.item.name}{' '}
           <ItemEdit
