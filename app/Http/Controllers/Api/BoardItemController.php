@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use App\Board;
+use App\BoardItem;
 
 use Auth;
 use Validator;
@@ -29,7 +30,6 @@ class BoardItemController extends Controller
     ];
 
     protected $updateCheck = [
-        'board_id' => 'required|integer|exists:boards,id',
         'board_item_id' => 'required|integer|exists:board_items,id',
         'name' => 'required',
         'public_key' => 'required',
@@ -55,25 +55,25 @@ class BoardItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $boardId)
     {
         $perPage = Input::get('per_page', 10);
         $direction = strtolower(Input::get('direction', 'asc'));
 
         if (empty($column)) {
-            $column = 'communities.order';
+            $column = 'board_items.order';
         }
 
         if (empty($direction)) {
-            $direction = 'asc';
+            $direction = 'desc';
         }
 
         $boardItems = $this->boardItemRepo->all();
 
         $boardItems = $boardItems->
-            // where(['upcoming' => 0])->
+            where(['board_id' => $boardId])->
             // orderBy('communities.order', $direction)->
-            // orderBy('communities.id', $direction)->
+            orderBy('board_items.id', $direction)->
             paginate($perPage);
 
         $boardItems->appends('per_page', $perPage);
@@ -99,10 +99,10 @@ class BoardItemController extends Controller
         return response()->json($this->item($community, new BoardItemTransformer));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $boardId, $boardItemId)
     {
         $data = $request->all();
-        $data['board_id'] = $id;
+        $data['board_item_id'] = $boardItemId;
 
         $validator = Validator::make($data, $this->updateCheck);
 
@@ -110,11 +110,11 @@ class BoardItemController extends Controller
             throw new WrongFieldsException('Could not update board', $validator->errors());
         }
 
-        $board = Board::find($id);
+        $boardItem = BoardItem::find($boardItemId);
 
-        $community = $this->boardItemRepo->update($board, $data);
+        $boardItem = $this->boardItemRepo->update($boardItem, $data);
 
-        return response()->json($this->item($board, new BoardTransformer));
+        return response()->json($this->item($boardItem, new BoardItemTransformer));
     }
 
     public function destroy($id)

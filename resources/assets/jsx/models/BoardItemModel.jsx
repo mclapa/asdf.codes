@@ -37,9 +37,14 @@ class BoardItemModel extends BaseModel {
   }
 
   prepareInit(boardId, data = {}) {
+    this.prepareAjax(boardId, data)
+
+    this.populateModel(this)
+  }
+
+  prepareAjax(boardId, data = {}) {
     this.ajaxParams = _.extend(this.ajaxParams, data)
     this.ajax = this.ajax.replace('$', boardId)
-    this.populateModel(this)
   }
 }
 

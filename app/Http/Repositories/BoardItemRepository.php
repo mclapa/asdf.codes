@@ -15,13 +15,12 @@ class BoardItemRepository {
         return $board;
     }
 
-    public function update($board, $data)
+    public function update($boardItem, $data)
     {
-        if (isset($data['board_items'])) {
-            $board->boardItems()->sync($data['board_items']);
-        }
+        $boardItem->fill($data);
+        $boardItem->save();
 
-        return $board;
+        return $boardItem;
     }
 
     public function all($where = [])

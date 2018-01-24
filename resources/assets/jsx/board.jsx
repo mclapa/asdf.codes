@@ -22,7 +22,7 @@ window.activeAjax = []
 
 let App = require('App.jsx')
 
-let BoardPage = require('components/BoardPage.jsx')
+let BoardPage = require('components/board-page/BoardPage.jsx')
 
 const root = document.createElement('div');
 document.body.appendChild(root);
