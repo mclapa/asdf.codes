@@ -10,6 +10,8 @@ let Xhr = require('functions/Xhr.jsx')
 
 let BoardItemModel = require('models/BoardItemModel.jsx')
 
+let MediaAdd = require('components/MediaAdd.jsx')
+
 let BoardItemPage = createReactClass({
   mixins: [
     Form.formMixin(),
@@ -67,6 +69,9 @@ let BoardItemPage = createReactClass({
       })
     })
   },
+  successAddFile(mediaId) {
+    console.log(mediaId)
+  },
   render() {
     return (
       <div>
@@ -102,7 +107,10 @@ let BoardItemPage = createReactClass({
           </div>
           <div className="form-group">
             <label htmlFor="exampleInputFile">.bat File</label>
-            <input type="file" id="exampleInputFile" />
+            <MediaAdd
+              alert={this.props.alert}
+              successAdd={this.successAddFile}
+            />
             <p className="help-block">Don't put anything personal in here</p>
           </div>
           <button

@@ -19,5 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('board/{boardId}/board-item', 'Api\BoardItemController');
 
+Route::resource('media', 'Api\MediaController', ['only' => [
+      'store'
+]]);
+
 # Route::resource('boards', 'Api\BoardController');
 // Route::resource('board/{boardId}', 'Api\BoardItemController');
