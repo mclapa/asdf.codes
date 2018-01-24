@@ -19,7 +19,10 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
-        window.CONSTS = {};
+        window.CONSTS = {
+            board_id: {{ $id }},
+            slug: '{{ $slug }}',
+        };
     </script>
 </head>
 <body class="react">

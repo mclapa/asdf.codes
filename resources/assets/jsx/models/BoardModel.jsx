@@ -29,11 +29,16 @@ class BoardModel extends BaseModel {
     // init the model
     this.model = _.cloneDeep(this.baseModel)
     // whether we want it to fetch ajax data or not
-    this.ajax = '/boards'
+    this.ajax = '/board/$'
     // the name of this model
     this.modelName = 'BoardModel'
 
     this.useLocalStorage = false
+  }
+
+  prepareInit(boardId, data = {}) {
+    this.ajax = this.ajax.replace('$', boardId)
+    this.populateModel(this, data)
   }
 }
 

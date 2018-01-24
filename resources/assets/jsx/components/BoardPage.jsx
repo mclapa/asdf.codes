@@ -4,15 +4,17 @@ import React from 'react'
 let createReactClass = require('create-react-class')
 
 let AlertMixin = require('mixins/AlertMixin.jsx')
+let ChangeEventMixin = require('mixins/MakeChangeEventMixin.jsx')
 let Form = require('mixins/FormMixin.jsx')
 let Xhr = require('functions/Xhr.jsx')
 
-let BoardModel = require('models/BoardModel.jsx')
+let BoardItemModel = require('models/BoardItemModel.jsx')
 
 let BoardPage = createReactClass({
   mixins: [
     Form.formMixin(),
     AlertMixin.alertMixin(),
+    ChangeEventMixin.makeChangeEventMixin(window.globalEmitter),
   ],
   getInitialState() {
     let formData = this.initFormData([
@@ -20,16 +22,21 @@ let BoardPage = createReactClass({
       'public_key',
     ])
 
+    let boardId = window.CONSTS.board_id
+
+    let boardItemModel = new BoardItemModel()
+    boardItemModel.prepareInit(boardId)
+
     return {
-      BoardModel: new BoardModel(),
+      BoardItemModel: boardItemModel,
       formData: formData,
     }
   },
   formSubmit(e) {
     e.preventDefault()
+
     let toSubmit = {}
     let formData = this.state.formData
-
 
     toSubmit = this.extractForm(this)
 
@@ -42,7 +49,7 @@ let BoardPage = createReactClass({
 
     Xhr.xhr(
       'POST',
-      `${this.state.BoardModel.ajax}/1`,
+      `${this.state.BoardItemModel.ajax}`,
       toSubmit
     ).then((xhrReturn) => {
       if (!xhrReturn.success) {

@@ -19,10 +19,10 @@ class HomeController extends Controller
      * @return void
      */
     public function __construct(
-        BoardRepository $boardsRepo
+        BoardRepository $boardRepo
     )
     {
-        $this->boardsRepo = $boardsRepo;
+        $this->boardRepo = $boardRepo;
     }
 
     /**
@@ -41,18 +41,19 @@ class HomeController extends Controller
     {
         $commData = [];
 
-        $board = $this->boardsRepo->where([
+        $board = $this->boardRepo->where([
             'slug' => $slug,
         ])->first();
 
         if (!$board) {
-            $board = $this->boardsRepo->add([
+            $board = $this->boardRepo->add([
                 'slug' => $slug,
             ]);
         }
 
         return view('welcome_board', [
             'slug' => $slug,
+            'id' => $board->id,
         ]);
     }
 }

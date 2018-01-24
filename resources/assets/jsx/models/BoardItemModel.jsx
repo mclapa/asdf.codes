@@ -29,9 +29,9 @@ class BoardItemModel extends BaseModel {
     // init the model
     this.model = _.cloneDeep(this.baseModel)
     // whether we want it to fetch ajax data or not
-    this.ajax = '/boards/$/board-item'
+    this.ajax = '/board/$/board-item'
     // the name of this model
-    this.modelName = 'BoardModel'
+    this.modelName = 'BoardItemModel'
 
     this.useLocalStorage = false
   }

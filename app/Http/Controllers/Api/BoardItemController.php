@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Transformers\BoardTransformer;
+use App\Http\Transformers\BoardItemTransformer;
 
-use App\Http\Repositories\BoardRepository;
+use App\Http\Repositories\BoardItemRepository;
 
 use App\Exceptions\WrongFieldsException;
 
@@ -20,11 +20,12 @@ use App\Board;
 use Auth;
 use Validator;
 
-class BoardController extends Controller
+class BoardItemController extends Controller
 {
     protected $storeCheck = [
         'board_id' => 'required|integer|exists:boards,id',
-        'slug' => 'required',
+        'name' => 'required',
+        'public_key' => 'required',
     ];
 
     protected $updateCheck = [
@@ -43,10 +44,10 @@ class BoardController extends Controller
     ];
 
     public function __construct(
-        BoardRepository $boardRepo
+        BoardItemRepository $boardItemRepo
     )
     {
-        $this->boardRepo = $boardRepo;
+        $this->boardItemRepo = $boardItemRepo;
     }
 
     /**
@@ -67,22 +68,23 @@ class BoardController extends Controller
             $direction = 'asc';
         }
 
-        $communities = $this->communitiesRepo;
+        $boardItems = $this->boardItemRepo->all();
 
-        $communities = $communities->
+        $boardItems = $boardItems->
             // where(['upcoming' => 0])->
-            orderBy('communities.order', $direction)->
-            orderBy('communities.id', $direction)->
+            // orderBy('communities.order', $direction)->
+            // orderBy('communities.id', $direction)->
             paginate($perPage);
 
-        $communities->appends('per_page', $perPage);
-        $communities->appends('direction', $direction);
+        $boardItems->appends('per_page', $perPage);
+        $boardItems->appends('direction', $direction);
 
-        return response()->json($this->paginator($communities, new CommunitiesTransformer));
+        return response()->json($this->paginator($boardItems, new BoardItemTransformer));
     }
 
     public function store(Request $request, $boardId)
     {
+
         $data = $request->all();
         $data['board_id'] = $boardId;
 
@@ -92,9 +94,9 @@ class BoardController extends Controller
             throw new WrongFieldsException('Could not add board item', $validator->errors());
         }
 
-        $community = $this->boardRepo->add($data);
+        $community = $this->boardItemRepo->add($data);
 
-        return response()->json($this->item($community, new BoardTransformer));
+        return response()->json($this->item($community, new BoardItemTransformer));
     }
 
     public function update(Request $request, $id)
@@ -110,7 +112,7 @@ class BoardController extends Controller
 
         $board = Board::find($id);
 
-        $community = $this->boardRepo->update($board, $data);
+        $community = $this->boardItemRepo->update($board, $data);
 
         return response()->json($this->item($board, new BoardTransformer));
     }
