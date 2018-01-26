@@ -17,6 +17,8 @@ class BoardItem extends Model
         'board_id',
         'name',
         'public_key',
+        'media_id',
+        'receiving_address',
     ];
 
     /**
@@ -27,5 +29,10 @@ class BoardItem extends Model
     protected $hidden = [
         'created_at', 'deleted_at', 'updated_at'
     ];
+
+    public function media()
+    {
+        return $this->hasOne('App\Media', 'id', 'media_id');
+    }
 
 }

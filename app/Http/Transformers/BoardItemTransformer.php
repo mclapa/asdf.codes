@@ -12,7 +12,10 @@ class BoardItemTransformer extends Fractal\TransformerAbstract{
             'id' => (int) $boardItem->id,
             'name' => $boardItem->name,
             'public_key' => $boardItem->public_key,
+            'receiving_address' => $boardItem->receiving_address,
         ];
+
+        $return['media'] = $boardItem->media;
 
         return $return;
     }

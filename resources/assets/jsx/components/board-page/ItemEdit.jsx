@@ -22,10 +22,12 @@ let ItemEdit = createReactClass({
     let formData = this.initFormData([
       'name',
       'public_key',
+      'receiving_address',
     ])
 
     formData.name.value = this.props.item.name
     formData.public_key.value = this.props.item.public_key
+    formData.receiving_address.value = this.props.item.receiving_address
 
     let boardId = window.CONSTS.board_id
 
@@ -131,6 +133,21 @@ let ItemEdit = createReactClass({
                     placeholder="Key"
                     ref="public_key"
                     value={this.state.formData.public_key.value}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-3 control-label">Receiving Address</label>
+                <div className="col-sm-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    maxLength="50"
+                    name="receiving_address"
+                    onChange={this.handleFieldChange}
+                    placeholder="Receiving Address"
+                    ref="receiving_address"
+                    value={this.state.formData.receiving_address.value}
                   />
                 </div>
               </div>

@@ -31,6 +31,6 @@ class CreateTableBoards extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('boards');
+        Schema::ds('boards');
     }
 }

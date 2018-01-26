@@ -26,13 +26,15 @@ class BoardItemController extends Controller
     protected $storeCheck = [
         'board_id' => 'required|integer|exists:boards,id',
         'name' => 'required',
-        'public_key' => 'required',
+        'public_key' => 'sometimes',
+        'receiving_address' => 'sometimes',
     ];
 
     protected $updateCheck = [
         'board_item_id' => 'required|integer|exists:board_items,id',
         'name' => 'required',
-        'public_key' => 'required',
+        'public_key' => 'sometimes',
+        'receiving_address' => 'sometimes',
     ];
 
     protected $orderCheck = [

@@ -40,7 +40,7 @@ let BoardPage = createReactClass({
         </nav>
         <div className="container text-left">
           <div className="row">
-            <div className="col-sm-4 col-sm-offset-3">
+            <div className="col-sm-6 col-sm-offset-4">
               <BoardAddItem
                 alert={this.alert}
               />
@@ -48,7 +48,7 @@ let BoardPage = createReactClass({
           </div>
           <hr />
           <div className="row">
-            <div className="col-sm-4 col-sm-offset-3">
+            <div className="col-sm-6 col-sm-offset-4">
               <BoardItemList
                 alert={this.alert}
               />

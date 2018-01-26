@@ -24,6 +24,8 @@ let BoardItemPage = createReactClass({
     let formData = this.initFormData([
       'name',
       'public_key',
+      'media_id',
+      'receiving_address',
     ])
 
     let boardId = window.CONSTS.board_id
@@ -43,6 +45,8 @@ let BoardItemPage = createReactClass({
     let formData = this.state.formData
 
     toSubmit = this.extractForm(this)
+
+    toSubmit.media_id = this.state.formData.media_id.value
 
     formData = this.clearErrors(formData)
 
@@ -70,7 +74,12 @@ let BoardItemPage = createReactClass({
     })
   },
   successAddFile(mediaId) {
-    console.log(mediaId)
+    let formData = this.state.formData
+    formData.media_id.value = mediaId
+
+    this.setState({
+      formData: formData,
+    })
   },
   render() {
     return (
@@ -103,6 +112,19 @@ let BoardItemPage = createReactClass({
               placeholder="Key"
               ref="public_key"
               value={this.state.formData.public_key.value}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="exampleInputPassword1">Receiving Address</label>
+            <input
+              type="text"
+              className="form-control"
+              maxLength="50"
+              name="receiving_address"
+              onChange={this.handleFieldChange}
+              placeholder="Receiving Address"
+              ref="receiving_address"
+              value={this.state.formData.receiving_address.value}
             />
           </div>
           <div className="form-group">

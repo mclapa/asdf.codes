@@ -18,7 +18,8 @@ class CreateTableBoardItems extends Migration
             $table->increments('id');
 
             $table->string('name');
-            $table->longText('public_key');
+            $table->longText('public_key')->nullable()->default(null);
+            $table->longText('receiving_address')->nullable()->default(null);
 
             $table->integer('board_id')->unsigned();
             $table->foreign('board_id')->references('id')->on('boards');

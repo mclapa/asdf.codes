@@ -1,9 +1,11 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 let createReactClass = require('create-react-class')
 
+let Assets = require('functions/Assets.jsx')
 let Form = require('mixins/FormMixin.jsx')
 
 let BoardItemModel = require('models/BoardItemModel.jsx')
@@ -45,12 +47,37 @@ let BoardItem = createReactClass({
           />
         </h3>
         <div className="form-horizontal">
-          <div className="form-group">
-            <label className="col-sm-4 control-label">Public Key</label>
-            <div className="col-sm-8">
-              <p className="form-control-static">{this.props.item.public_key}</p>
+          {this.props.item.public_key ? (
+            <div className="form-group">
+              <label className="col-sm-4 control-label">Public Key</label>
+              <div className="col-sm-8">
+                <p className="form-control-static">{this.props.item.public_key}</p>
+              </div>
             </div>
-          </div>
+          ) : null}
+          {this.props.item.receiving_address ? (
+            <div className="form-group">
+              <label className="col-sm-4 control-label">Receiving Address</label>
+              <div className="col-sm-8">
+                <p className="form-control-static">{this.props.item.receiving_address}</p>
+              </div>
+            </div>
+          ) : null}
+          {!_.isEmpty(this.props.item.media) ? (
+            <div className="form-group">
+              <label className="col-sm-4 control-label">File</label>
+              <div className="col-sm-8">
+                <p className="form-control-static">
+                  <a
+                    href={Assets.media(this.props.item.media.filename)}
+                    download
+                  >
+                    {this.props.item.media.original_filename}
+                  </a>
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
       </li>
     )
