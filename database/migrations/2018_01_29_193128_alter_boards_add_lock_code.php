@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableBoards extends Migration
+class AlterBoardsAddLockCode extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,8 @@ class CreateTableBoards extends Migration
     public function up()
     {
         //
-        Schema::create('boards', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->string('slug');
-
-            $table->timestamps();
+        Schema::table('boards', function (Blueprint $table) {
+            $table->longText('lock_code')->nullable()->default(null);
         });
     }
 
@@ -31,6 +27,8 @@ class CreateTableBoards extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('boards');
+        Schema::table('boards', function (Blueprint $table) {
+            $table->dropColumn('lock_code');
+        });
     }
 }

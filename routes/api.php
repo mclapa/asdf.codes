@@ -17,7 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('board/{boardId}/board-item', 'Api\BoardItemController');
+Route::group(['middleware' => ['web']], function () {
+  Route::resource('board-item/{boardId}/items', 'Api\BoardItemController');
+
+  Route::resource('board', 'Api\BoardController');
+
+  Route::post('board-lock/{boardId}', 'Api\BoardController@boardLock');
+  Route::post('board-unlock/{boardId}', 'Api\BoardController@boardUnlock');
+});
 
 Route::resource('media', 'Api\MediaController', ['only' => [
       'store'

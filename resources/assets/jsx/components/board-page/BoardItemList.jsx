@@ -8,7 +8,7 @@ let createReactClass = require('create-react-class')
 let ChangeEventMixin = require('mixins/MakeChangeEventMixin.jsx')
 let Form = require('mixins/FormMixin.jsx')
 
-let BoardItemModel = require('models/BoardItemModel.jsx')
+let BoardModel = require('models/BoardModel.jsx')
 
 let BoardItem = require('./BoardItem.jsx')
 
@@ -23,12 +23,11 @@ let BoardItemList = createReactClass({
   getInitialState() {
     let boardId = window.CONSTS.board_id
 
-    let boardItemModel = new BoardItemModel()
-    boardItemModel.prepareInit(boardId)
+    let boardModel = new BoardModel()
+    boardModel.prepareInit(boardId)
 
     return {
-      BoardItemModel: boardItemModel,
-
+      BoardModel: boardModel,
     }
   },
   generateData(data) {
@@ -48,6 +47,7 @@ let BoardItemList = createReactClass({
           <BoardItem
             key={`fu-${v.id}`}
             alert={this.props.alert}
+            BoardModel={this.state.BoardModel}
             item={v}
           />
         )
@@ -57,7 +57,7 @@ let BoardItemList = createReactClass({
     return toReturn
   },
   render() {
-    let generatedData = this.generateData(this.state.BoardItemModel.model.results)
+    let generatedData = this.generateData(this.state.BoardModel.model.board_items)
 
     return (
       <ul className="list-group">

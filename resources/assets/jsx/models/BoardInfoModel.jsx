@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 let BaseModel = require('models/BaseModel.jsx')
 
-class BoardItemModel extends BaseModel {
+class BoardModel extends BaseModel {
   constructor() {
     super()
 
@@ -29,9 +29,9 @@ class BoardItemModel extends BaseModel {
     // init the model
     this.model = _.cloneDeep(this.baseModel)
     // whether we want it to fetch ajax data or not
-    this.ajax = '/board-item/$/items'
+    this.ajax = '/board/$'
     // the name of this model
-    this.modelName = 'BoardItemModel'
+    this.modelName = 'BoardModel'
 
     this.useLocalStorage = false
   }
@@ -48,5 +48,5 @@ class BoardItemModel extends BaseModel {
   }
 }
 
-module.exports = BoardItemModel
+module.exports = BoardModel
 

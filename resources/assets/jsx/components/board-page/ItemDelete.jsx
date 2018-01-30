@@ -11,6 +11,7 @@ let ItemDelete = createReactClass({
   mixins: [PureRenderMixin],
   propTypes: {
     alert: PropTypes.func.isRequired,
+    BoardModel: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
   },
   getInitialState() {
@@ -31,7 +32,8 @@ let ItemDelete = createReactClass({
   },
   confirm() {
     this.state.BoardItemModel.deleteModel(this.props.item).then(() => {
-      this.props.alert('Coin removed')
+      this.props.BoardModel.refreshModel()
+      this.props.alert('Coin deleted')
     })
 
     this.hide()

@@ -9,6 +9,7 @@ let Form = require('mixins/FormMixin.jsx')
 let Xhr = require('functions/Xhr.jsx')
 
 let BoardItemModel = require('models/BoardItemModel.jsx')
+let SessionModel = require('models/SessionModel.jsx')
 
 let ItemEdit = createReactClass({
   mixins: [
@@ -16,6 +17,7 @@ let ItemEdit = createReactClass({
   ],
   propTypes: {
     alert: PropTypes.func.isRequired,
+    BoardModel: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
   },
   getInitialState() {
@@ -25,19 +27,21 @@ let ItemEdit = createReactClass({
       'receiving_address',
     ])
 
-    formData.name.value = this.props.item.name
-    formData.public_key.value = this.props.item.public_key
-    formData.receiving_address.value = this.props.item.receiving_address
-
-    let boardId = window.CONSTS.board_id
+    formData.name.value = (this.props.item.name) ? this.props.item.name : ''
+    formData.public_key.value = (this.props.item.public_key) ? this.props.item.public_key : ''
+    formData.receiving_address.value = (this.props.item.receiving_address) ? this.props.item.receiving_address : ''
 
     let boardItemModel = new BoardItemModel()
-    boardItemModel.prepareAjax(boardId)
+    boardItemModel.prepareAjax(this.props.BoardModel.model.id)
+
+    let sessionModel = new SessionModel()
+    sessionModel.populateModel(sessionModel)
 
     return {
       BoardItemModel: boardItemModel,
       formData: formData,
       isSubmitting: false,
+      SessionModel: sessionModel,
       show: false,
     }
   },
@@ -63,6 +67,8 @@ let ItemEdit = createReactClass({
       formData: formData,
     })
 
+    toSubmit.code = this.state.SessionModel.getUnlockCode(this.props.BoardModel.model.id)
+
     Xhr.xhr(
       'PUT',
       `${this.state.BoardItemModel.ajax}/${this.props.item.id}`,
@@ -78,7 +84,7 @@ let ItemEdit = createReactClass({
       } else {
         this.props.alert('Coin updated')
 
-        this.state.BoardItemModel.refreshModel()
+        this.props.BoardModel.refreshModel()
 
         this.setState({
           isSubmitting: false,

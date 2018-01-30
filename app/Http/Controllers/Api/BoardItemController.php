@@ -86,9 +86,9 @@ class BoardItemController extends Controller
 
     public function store(Request $request, $boardId)
     {
-
         $data = $request->all();
         $data['board_id'] = $boardId;
+        $hasAccess = true;
 
         $validator = Validator::make($data, $this->storeCheck);
 
@@ -96,15 +96,33 @@ class BoardItemController extends Controller
             throw new WrongFieldsException('Could not add board item', $validator->errors());
         }
 
-        $community = $this->boardItemRepo->add($data);
+        $board = Board::find($data['board_id']);
 
-        return response()->json($this->item($community, new BoardItemTransformer));
+        // check if locked
+        if ($board->lock_code) {
+            if (empty($data['code'])) {
+                $hasAccess = false;
+            } else {
+                if ($board->lock_code !== $data['code']) {
+                    $hasAccess = false;
+                }
+            }
+        }
+
+        if ($hasAccess) {
+            $boardItem = $this->boardItemRepo->add($data);
+
+            return response()->json($this->item($boardItem, new BoardItemTransformer));
+        } else {
+            throw new WrongFieldsException('Unlock profile before modifying');
+        }
     }
 
     public function update(Request $request, $boardId, $boardItemId)
     {
         $data = $request->all();
         $data['board_item_id'] = $boardItemId;
+        $hasAccess = true;
 
         $validator = Validator::make($data, $this->updateCheck);
 
@@ -114,9 +132,26 @@ class BoardItemController extends Controller
 
         $boardItem = BoardItem::find($boardItemId);
 
-        $boardItem = $this->boardItemRepo->update($boardItem, $data);
+        // check if locked
+        if ($boardItem->board->lock_code) {
+            if (empty($data['code'])) {
+                $hasAccess = false;
+            } else {
+                if ($boardItem->board->lock_code !== $data['code']) {
+                    $hasAccess = false;
+                }
+            }
+        }
 
-        return response()->json($this->item($boardItem, new BoardItemTransformer));
+        if ($hasAccess) {
+            $boardItem = $this->boardItemRepo->update($boardItem, $data);
+
+            return response()->json($this->item($boardItem, new BoardItemTransformer));
+        } else {
+            throw new WrongFieldsException('Unlock profile before modifying');
+        }
+
+
     }
 
     public function destroy(Request $request, $boardId, $boardItemId)

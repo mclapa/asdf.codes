@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Board;
+use Crypt;
 
 class BoardRepository {
 
@@ -20,6 +21,13 @@ class BoardRepository {
         if (isset($data['board_items'])) {
             $board->boardItems()->sync($data['board_items']);
         }
+
+        if (!empty($data['lock_code'])) {
+            $data['lock_code'] = Crypt::encrypt($data['lock_code']);
+        }
+
+        $board->fill($data);
+        $board->save();
 
         return $board;
     }

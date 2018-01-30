@@ -9,21 +9,15 @@ class BoardModel extends BaseModel {
 
     // init class variables ( better way? )
     this.baseModel = {
-      results: [],
-      pagination: {
-        current_page: 0,
-        last_page: 0,
-        total_pages: 0,
-      },
+      is_locked: '',
+      id: 0,
+      slug: '',
+      board_items: [],
+      lock_code: '',
     }
 
     // params we might want to use for pagination
     this.ajaxParams = {
-      page: 1,
-      per_page: 50,
-      column: null,
-      direction: null,
-      with_trashed: 0,
     }
 
     // init the model

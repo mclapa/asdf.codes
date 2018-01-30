@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Transformers\BoardTransformer;
 
-use App\Http\Repositories\BoardItemRepository;
+use App\Http\Repositories\BoardRepository;
 
 use App\Exceptions\WrongFieldsException;
 
@@ -18,6 +18,7 @@ use App\Http\Requests;
 use App\Board;
 
 use Auth;
+use Crypt;
 use Validator;
 
 class BoardController extends Controller
@@ -35,19 +36,29 @@ class BoardController extends Controller
         'board_items' => 'sometimes|array'
     ];
 
+    protected $showCheck = [
+        'board_id' => 'required|integer|exists:boards,id',
+    ];
+
     protected $orderCheck = [
         'community_id' => 'required|integer|exists:communities,id',
     ];
 
-    protected $showCheck = [
-        'id' => 'required|numeric',
+    protected $lockCheck = [
+        'board_id' => 'required|integer|exists:boards,id',
+        'lock_code' => 'required',
+    ];
+
+    protected $unlockCheck = [
+        'board_id' => 'required|integer|exists:boards,id',
+        'lock_code' => 'required',
     ];
 
     public function __construct(
-        BoardItemRepository $boardItemRepo
+        BoardRepository $boardRepo
     )
     {
-        $this->boardItemRepo = $boardItemRepo;
+        $this->boardRepo = $boardRepo;
     }
 
     /**
@@ -55,31 +66,25 @@ class BoardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $perPage = Input::get('per_page', 10);
-        $direction = strtolower(Input::get('direction', 'asc'));
-
-        if (empty($column)) {
-            $column = 'communities.order';
-        }
-
-        if (empty($direction)) {
-            $direction = 'asc';
-        }
-
-        $communities = $this->communitiesRepo;
-
-        $communities = $communities->
-            // where(['upcoming' => 0])->
-            orderBy('communities.order', $direction)->
-            orderBy('communities.id', $direction)->
-            paginate($perPage);
-
-        $communities->appends('per_page', $perPage);
-        $communities->appends('direction', $direction);
-
+        die('unused');
         return response()->json($this->paginator($communities, new CommunitiesTransformer));
+    }
+
+    public function show(Request $request, $boardId) {
+        $data = $request->all();
+        $data['board_id'] = $boardId;
+
+        $validator = Validator::make($data, $this->showCheck);
+
+        if ($validator->fails()) {
+            throw new WrongFieldsException('Could not update board', $validator->errors());
+        }
+
+        $boardInfo = Board::find($data['board_id']);
+
+        return response()->json($this->item($boardInfo, new BoardTransformer));
     }
 
     public function store(Request $request, $boardId)
@@ -130,5 +135,60 @@ class BoardController extends Controller
         $delete = $this->communitiesRepo->destroy($id);
 
         return response()->json(['data' => ['success' => $delete ? true: false]]);
+    }
+
+    public function boardLock(Request $request, $boardId)
+    {
+        $data = $request->all();
+        $data['board_id'] = $boardId;
+
+        $validator = Validator::make($data, $this->lockCheck);
+
+        if ($validator->fails()) {
+            throw new WrongFieldsException('Could not update board', $validator->errors());
+        }
+
+        $board = Board::find($data['board_id']);
+
+        if ($board->lock_code) {
+            return response()->json(['data' => [
+                'success' => false,
+            ]]);
+        }
+
+        $board = $this->boardRepo->update($board, [
+            'lock_code' => $data['lock_code']
+        ]);
+
+        return response()->json(['data' => [
+            'success' => true,
+            'lock_code' => $board->lock_code,
+        ]]);
+    }
+
+    public function boardUnlock(Request $request, $boardId)
+    {
+        $data = $request->all();
+        $data['board_id'] = $boardId;
+        $success = false;
+
+        $validator = Validator::make($data, $this->unlockCheck);
+
+        if ($validator->fails()) {
+            throw new WrongFieldsException('Could not update board', $validator->errors());
+        }
+
+        $board = Board::find($data['board_id']);
+
+        if ($board->lock_code) {
+            if (Crypt::decrypt($board->lock_code) === $data['lock_code']) {
+                $success = true;
+            }
+        }
+
+        return response()->json(['data' => [
+            'success' => $success,
+            'lock_code' => $board->lock_code,
+        ]]);
     }
 }

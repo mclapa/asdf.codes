@@ -15,6 +15,7 @@ class Board extends Model
      */
     protected $fillable = [
         'slug',
+        'lock_code',
     ];
 
     /**

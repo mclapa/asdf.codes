@@ -27,9 +27,8 @@ class BaseModel {
     // lets try to get it from browser storage first
     let sessionStorageModel = sessionStorage.getObject(this.modelName)
 
-
     // if it's not in browser, lets get it and set it
-    if (!this.useLocalStorage || (_.isEmpty(sessionStorageModel) || !sessionStorageModel.id)) {
+    if (!this.useLocalStorage) {
       // if theres any ajax params, get em ready
       if (this.ajaxParams) {
         data = _.clone(_.assign(this.ajaxParams, data))
@@ -72,8 +71,12 @@ class BaseModel {
         return xhrReturn
       })
     } else {
-      // it exists in storage so lets just retrieve and save it
-      this.model = sessionStorageModel
+      this.model = this.baseModel
+
+      if (sessionStorageModel) {
+        // it exists in storage so lets just retrieve and save it
+        this.model = sessionStorageModel
+      }
     }
   }
 

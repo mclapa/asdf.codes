@@ -35,4 +35,9 @@ class BoardItem extends Model
         return $this->hasOne('App\Media', 'id', 'media_id');
     }
 
+    public function board()
+    {
+        return $this->belongsTo('App\Board', 'board_id', 'id');
+    }
+
 }

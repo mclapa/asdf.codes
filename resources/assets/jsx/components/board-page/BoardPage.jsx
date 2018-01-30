@@ -5,6 +5,7 @@ let createReactClass = require('create-react-class')
 
 let BoardAddItem = require('./BoardAddItem.jsx')
 let BoardItemList = require('./BoardItemList.jsx')
+let BoardLock = require('./BoardLock.jsx')
 
 let AlertMixin = require('mixins/AlertMixin.jsx')
 
@@ -27,12 +28,10 @@ let BoardPage = createReactClass({
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav pull-right">
                 <li>
-                  <a
-                    href="#"
-                    className="text-success"
-                  >
-                    Unlock
-                  </a>
+                  <BoardLock
+                    alert={this.alert}
+                    alertWarning={this.alertWarning}
+                  />
                 </li>
               </ul>
             </div>
